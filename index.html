@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+ 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Controle de Estoque</title>
  
-style.css
+<link rel="stylesheet" href="style.css">
  
 </head>
+ 
 <body>
  
 <header>
@@ -39,28 +41,46 @@ style.css
  
 <h2>Cadastrar Produto</h2>
  
-<input type="text" id="nome" placeholder="Nome do Produto" required>
+<input
+type="text"
+id="nome"
+placeholder="Nome do Produto"
+required>
  
 <select id="categoria">
 <option>Peça</option>
 <option>Pneu</option>
 </select>
  
-<input type="text" id="marca" placeholder="Marca" required>
+<input
+type="text"
+id="marca"
+placeholder="Marca"
+required>
  
-<input type="number" id="quantidade" placeholder="Quantidade" required>
+<input
+type="number"
+id="quantidade"
+placeholder="Quantidade"
+required>
  
-<input type="number" id="preco" placeholder="Preço" step="0.01" required>
+<input
+type="number"
+id="preco"
+placeholder="Preço"
+step="0.01"
+required>
  
-<button type="submit">Salvar Produto</button>
+<button type="submit">
+Salvar Produto
+</button>
  
 </form>
  
 <input
 type="text"
 id="pesquisa"
-placeholder="Pesquisar produto..."
->
+placeholder="Pesquisar produto...">
  
 <button onclick="exportarExcel()">
 📊 Exportar Excel
@@ -84,13 +104,16 @@ placeholder="Pesquisar produto..."
 </table>
  
 <div class="historico">
+ 
 <h2>Histórico de Movimentações</h2>
+ 
 <ul id="historico"></ul>
-</div>
  
 </div>
  
-script.jsscript>
+</div>
+ 
+<script src="script.js"></script>
  
 </body>
 </html>
