@@ -1,15 +1,117 @@
+HTML
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Controle de Estoque</title>
-</head>
  
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f4f4f4;
+margin:0;
+padding:20px;
+}
+ 
+h1{
+text-align:center;
+color:#333;
+}
+ 
+.container{
+background:white;
+padding:20px;
+border-radius:10px;
+max-width:900px;
+margin:auto;
+}
+ 
+input{
+padding:10px;
+margin:5px;
+}
+ 
+button{
+padding:10px;
+background:#007bff;
+color:white;
+border:none;
+cursor:pointer;
+}
+ 
+table{
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+}
+ 
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:center;
+}
+</style>
+ 
+</head>
 <body>
+ 
+<div class="container">
  
 <h1>Controle de Estoque</h1>
  
-<p>Meu site está funcionando!</p>
+<input type="text" id="produto" placeholder="Produto">
+<input type="number" id="quantidade" placeholder="Quantidade">
+ 
+<button onclick="adicionar()">
+Adicionar
+</button>
+ 
+<table>
+<thead>
+<tr>
+<th>Produto</th>
+<th>Quantidade</th>
+</tr>
+</thead>
+ 
+<tbody id="tabela">
+</tbody>
+ 
+</table>
+ 
+</div>
+ 
+<script>
+ 
+function adicionar(){
+ 
+let produto =
+document.getElementById("produto").value;
+ 
+let quantidade =
+document.getElementById("quantidade").value;
+ 
+if(produto == "" || quantidade == ""){
+alert("Preencha os campos");
+return;
+}
+ 
+let linha =
+`<tr>
+<td>${produto}</td>
+<td>${quantidade}</td>
+</tr>`;
+ 
+document.getElementById("tabela")
+.innerHTML += linha;
+ 
+document.getElementById("produto").value = "";
+document.getElementById("quantidade").value = "";
+ 
+}
+ 
+</script>
  
 </body>
 </html>
