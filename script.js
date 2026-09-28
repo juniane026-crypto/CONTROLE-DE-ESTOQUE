@@ -4,8 +4,7 @@ JSON.parse(localStorage.getItem("estoque")) || [];
 let historico =
 JSON.parse(localStorage.getItem("historico")) || [];
  
-function salvarDados(){
- 
+function salvarDados() {
 localStorage.setItem(
 "estoque",
 JSON.stringify(produtos)
@@ -15,10 +14,9 @@ localStorage.setItem(
 "historico",
 JSON.stringify(historico)
 );
- 
 }
  
-function atualizarDashboard(){
+function atualizarDashboard() {
  
 document.getElementById("totalProdutos").innerText =
 produtos.length;
@@ -26,7 +24,7 @@ produtos.length;
 let totalItens = 0;
 let valorTotal = 0;
  
-produtos.forEach(produto=>{
+produtos.forEach(produto => {
  
 totalItens += Number(produto.quantidade);
  
@@ -41,25 +39,29 @@ totalItens;
  
 document.getElementById("valorTotal").innerText =
 "R$ " + valorTotal.toFixed(2);
- 
 }
  
-function renderizarHistorico(){
+function renderizarHistorico() {
  
 const lista =
 document.getElementById("historico");
  
 lista.innerHTML = "";
  
-historico.slice().reverse().forEach(item=>{
+historico
+.slice()
+.reverse()
+.forEach(item => {
  
-lista.innerHTML += `<li>${item}</li>`;
+lista.innerHTML += `
+<li>${item}</li>
+`;
  
 });
  
 }
  
-function renderizar(filtro=""){
+function renderizar(filtro = "") {
  
 const lista =
 document.getElementById("lista");
@@ -67,20 +69,23 @@ document.getElementById("lista");
 lista.innerHTML = "";
  
 produtos
-.filter(p =>
-p.nome.toLowerCase().includes(
+.filter(produto =>
+produto.nome
+.toLowerCase()
+.includes(
 filtro.toLowerCase()
-))
-.forEach((p,index)=>{
+)
+)
+.forEach((produto, index) => {
  
 lista.innerHTML += `
 <tr>
  
-<td>${p.nome}</td>
-<td>${p.categoria}</td>
-<td>${p.marca}</td>
-<td>${p.quantidade}</td>
-<td>R$ ${Number(p.preco).toFixed(2)}</td>
+<td>${produto.nome}</td>
+<td>${produto.categoria}</td>
+<td>${produto.marca}</td>
+<td>${produto.quantidade}</td>
+<td>R$ ${Number(produto.preco).toFixed(2)}</td>
  
 <td>
  
@@ -111,19 +116,18 @@ Excluir
  
 atualizarDashboard();
 renderizarHistorico();
- 
 }
  
-function entrada(index){
+function entrada(index) {
  
 let qtd =
 prompt("Quantidade de entrada:");
  
-if(!qtd) return;
+if (!qtd) return;
  
 produtos[index].quantidade =
-Number(produtos[index].quantidade)
-+ Number(qtd);
+Number(produtos[index].quantidade) +
+Number(qtd);
  
 historico.push(
 `Entrada ${qtd} - ${produtos[index].nome}`
@@ -131,27 +135,26 @@ historico.push(
  
 salvarDados();
 renderizar();
- 
 }
  
-function saida(index){
+function saida(index) {
  
 let qtd =
 prompt("Quantidade de saída:");
  
-if(!qtd) return;
+if (!qtd) return;
  
-if(Number(qtd) >
-Number(produtos[index].quantidade)){
- 
+if (
+Number(qtd) >
+Number(produtos[index].quantidade)
+) {
 alert("Estoque insuficiente");
 return;
- 
 }
  
 produtos[index].quantidade =
-Number(produtos[index].quantidade)
-- Number(qtd);
+Number(produtos[index].quantidade) -
+Number(qtd);
  
 historico.push(
 `Saída ${qtd} - ${produtos[index].nome}`
@@ -159,99 +162,19 @@ historico.push(
  
 salvarDados();
 renderizar();
- 
 }
  
-function excluirProduto(index){
+function excluirProduto(index) {
  
-if(confirm("Excluir produto?")){
+if (confirm("Excluir produto?")) {
  
 historico.push(
 `Produto excluído: ${produtos[index].nome}`
 );
  
-produtos.splice(index,1);
+produtos.splice(index, 1);
  
 salvarDados();
 renderizar();
- 
 }
- 
 }
- 
-document
-.getElementById("formulario")
-.addEventListener("submit",e=>{
- 
-e.preventDefault();
- 
-produtos.push({
- 
-nome:
-document.getElementById("nome").value,
- 
-categoria:
-document.getElementById("categoria").value,
- 
-marca:
-document.getElementById("marca").value,
- 
-quantidade:
-document.getElementById("quantidade").value,
- 
-preco:
-document.getElementById("preco").value
- 
-});
- 
-historico.push(
-`Produto cadastrado`
-);
- 
-salvarDados();
- 
-renderizar();
- 
-e.target.reset();
- 
-});
- 
-document
-.getElementById("pesquisa")
-.addEventListener("keyup",e=>{
- 
-renderizar(e.target.value);
- 
-});
- 
-function exportarExcel(){
- 
-let csv =
-"Produto,Categoria,Marca,Quantidade,Preco\n";
- 
-produtos.forEach(p=>{
- 
-csv +=
-`${p.nome},${p.categoria},${p.marca},${p.quantidade},${p.preco}\n`;
- 
-});
- 
-const blob =
-new Blob([csv],{
-type:"text/csv;charset=utf-8;"
-});
- 
-const link =
-document.createElement("a");
- 
-link.href =
-URL.createObjectURL(blob);
- 
-link.download =
-"estoque.csv";
- 
-link.click();
- 
-}
- 
-renderizar();
