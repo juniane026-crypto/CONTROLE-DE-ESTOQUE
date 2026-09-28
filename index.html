@@ -3,137 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle de Estoque Profissional</title>
+<title>Controle de Estoque</title>
  
-<style>
+style.css
  
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
- 
-body{
-background:#f1f5f9;
-}
- 
-header{
-background:#0f172a;
-color:white;
-padding:20px;
-text-align:center;
-}
- 
-.container{
-width:95%;
-max-width:1200px;
-margin:auto;
-padding:20px;
-}
- 
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:15px;
-margin-bottom:20px;
-}
- 
-.card{
-background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 2px 5px rgba(0,0,0,.1);
-text-align:center;
-}
- 
-.card h2{
-color:#2563eb;
-margin-top:10px;
-}
- 
-form{
-background:white;
-padding:20px;
-border-radius:10px;
-margin-bottom:20px;
-}
- 
-form input,
-form select{
-width:100%;
-padding:10px;
-margin:8px 0;
-}
- 
-button{
-padding:10px;
-border:none;
-border-radius:5px;
-cursor:pointer;
-color:white;
-margin:2px;
-}
- 
-.salvar{
-background:#2563eb;
-}
- 
-.entrada{
-background:#16a34a;
-}
- 
-.saida{
-background:#ea580c;
-}
- 
-.excluir{
-background:#dc2626;
-}
- 
-#pesquisa{
-width:100%;
-padding:10px;
-margin-bottom:15px;
-}
- 
-table{
-width:100%;
-background:white;
-border-collapse:collapse;
-margin-bottom:20px;
-}
- 
-th{
-background:#0f172a;
-color:white;
-}
- 
-th,td{
-padding:12px;
-border:1px solid #ddd;
-text-align:center;
-}
- 
-.movimentacoes{
-background:white;
-padding:20px;
-border-radius:10px;
-}
- 
-.movimentacoes ul{
-margin-top:15px;
-}
- 
-.movimentacoes li{
-padding:8px;
-border-bottom:1px solid #ddd;
-list-style:none;
-}
- 
-</style>
 </head>
- 
 <body>
  
 <header>
@@ -176,15 +50,21 @@ list-style:none;
  
 <input type="number" id="quantidade" placeholder="Quantidade" required>
  
-<input type="number" step="0.01" id="preco" placeholder="Preço de Venda" required>
+<input type="number" id="preco" placeholder="Preço" step="0.01" required>
  
-<button class="salvar" type="submit">
-Salvar Produto
-</button>
+<button type="submit">Salvar Produto</button>
  
 </form>
  
-<input type="text" id="pesquisa" placeholder="Pesquisar produto...">
+<input
+type="text"
+id="pesquisa"
+placeholder="Pesquisar produto..."
+>
+ 
+<button onclick="exportarExcel()">
+📊 Exportar Excel
+</button>
  
 <table>
  
@@ -203,252 +83,14 @@ Salvar Produto
  
 </table>
  
-<div class="movimentacoes">
- 
+<div class="historico">
 <h2>Histórico de Movimentações</h2>
- 
 <ul id="historico"></ul>
- 
 </div>
  
 </div>
  
-<script>
- 
-let produtos =
-JSON.parse(localStorage.getItem("estoque")) || [];
- 
-let historico =
-JSON.parse(localStorage.getItem("historico")) || [];
- 
-function salvarDados(){
- 
-localStorage.setItem(
-"estoque",
-JSON.stringify(produtos)
-);
- 
-localStorage.setItem(
-"historico",
-JSON.stringify(historico)
-);
- 
-}
- 
-function atualizarDashboard(){
- 
-document.getElementById("totalProdutos")
-.innerText = produtos.length;
- 
-let totalItens = 0;
-let valorTotal = 0;
- 
-produtos.forEach(produto=>{
- 
-totalItens += Number(produto.quantidade);
- 
-valorTotal +=
-Number(produto.quantidade) *
-Number(produto.preco);
- 
-});
- 
-document.getElementById("totalEstoque")
-.innerText = totalItens;
- 
-document.getElementById("valorTotal")
-.innerText =
-"R$ " + valorTotal.toFixed(2);
- 
-}
- 
-function renderizarHistorico(){
- 
-let lista =
-document.getElementById("historico");
- 
-lista.innerHTML = "";
- 
-historico.slice().reverse().forEach(item=>{
- 
-lista.innerHTML += `
-<li>${item}</li>
-`;
- 
-});
- 
-}
- 
-function renderizar(filtro=""){
- 
-let tabela =
-document.getElementById("lista");
- 
-tabela.innerHTML="";
- 
-produtos
-.filter(produto =>
-produto.nome.toLowerCase()
-.includes(filtro.toLowerCase())
-)
-.forEach((produto,index)=>{
- 
-tabela.innerHTML += `
-<tr>
-<td>${produto.nome}</td>
-<td>${produto.categoria}</td>
-<td>${produto.marca}</td>
-<td>${produto.quantidade}</td>
-<td>R$ ${Number(produto.preco).toFixed(2)}</td>
- 
-<td>
- 
-<button
-class="entrada"
-onclick="entrada(${index})">
-+ Entrada
-</button>
- 
-<button
-class="saida"
-onclick="saida(${index})">
-- Saída
-</button>
- 
-<button
-class="excluir"
-onclick="excluirProduto(${index})">
-Excluir
-</button>
- 
-</td>
- 
-</tr>
-`;
- 
-});
- 
-atualizarDashboard();
-renderizarHistorico();
- 
-}
- 
-function entrada(index){
- 
-let qtd = prompt("Quantidade de entrada:");
- 
-if(!qtd) return;
- 
-produtos[index].quantidade =
-Number(produtos[index].quantidade) +
-Number(qtd);
- 
-historico.push(
-`Entrada de ${qtd} unidade(s) em ${produtos[index].nome}`
-);
- 
-salvarDados();
- 
-renderizar();
- 
-}
- 
-function saida(index){
- 
-let qtd = prompt("Quantidade de saída:");
- 
-if(!qtd) return;
- 
-if(Number(qtd) >
-Number(produtos[index].quantidade)){
- 
-alert("Estoque insuficiente.");
-return;
- 
-}
- 
-produtos[index].quantidade =
-Number(produtos[index].quantidade) -
-Number(qtd);
- 
-historico.push(
-`Saída de ${qtd} unidade(s) de ${produtos[index].nome}`
-);
- 
-salvarDados();
- 
-renderizar();
- 
-}
- 
-function excluirProduto(index){
- 
-if(confirm("Deseja excluir este produto?")){
- 
-historico.push(
-`Produto excluído: ${produtos[index].nome}`
-);
- 
-produtos.splice(index,1);
- 
-salvarDados();
- 
-renderizar();
- 
-}
- 
-}
- 
-document
-.getElementById("formulario")
-.addEventListener("submit",function(e){
- 
-e.preventDefault();
- 
-const produto = {
- 
-nome:
-document.getElementById("nome").value,
- 
-categoria:
-document.getElementById("categoria").value,
- 
-marca:
-document.getElementById("marca").value,
- 
-quantidade:
-document.getElementById("quantidade").value,
- 
-preco:
-document.getElementById("preco").value
- 
-};
- 
-produtos.push(produto);
- 
-historico.push(
-`Produto cadastrado: ${produto.nome}`
-);
- 
-salvarDados();
- 
-renderizar();
- 
-this.reset();
- 
-});
- 
-document
-.getElementById("pesquisa")
-.addEventListener("keyup",function(){
- 
-renderizar(this.value);
- 
-});
- 
-renderizar();
- 
-</script>
+script.jsscript>
  
 </body>
 </html>
